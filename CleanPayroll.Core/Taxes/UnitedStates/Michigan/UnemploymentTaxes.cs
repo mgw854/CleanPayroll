@@ -1,4 +1,5 @@
-﻿using NodaTime;
+﻿using System.Threading.Tasks;
+using NodaTime;
 
 namespace CleanPayroll.Core.Taxes.UnitedStates.Michigan
 {
@@ -12,14 +13,14 @@ namespace CleanPayroll.Core.Taxes.UnitedStates.Michigan
       _employerRate = employerRate;
     }
 
-    public TaxAssessment? Calculate(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate)
+    public Task<TaxAssessment?> CalculateAsync(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate)
     {
       if (employee.Residence.State != "Michigan")
       {
-        return null;
+        return Task.FromResult<TaxAssessment?>(null);
       }
 
-      return new TaxAssessment(grossPay.GetTaxOnPayWithCap(grossPayToDate, UnemploymentTaxes.Ceiling, _employerRate), Money.Zero);
+      return Task.FromResult<TaxAssessment?>(new TaxAssessment(grossPay.GetTaxOnPayWithCap(grossPayToDate, UnemploymentTaxes.Ceiling, _employerRate), Money.Zero));
     }
   }
 }

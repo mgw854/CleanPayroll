@@ -1,9 +1,10 @@
-﻿using NodaTime;
+﻿using System.Threading.Tasks;
+using NodaTime;
 
 namespace CleanPayroll.Core.Taxes
 {
   public interface ITaxCalculator
   {
-    TaxAssessment? Calculate(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate);
+    Task<TaxAssessment?> CalculateAsync(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate);
   }
 }

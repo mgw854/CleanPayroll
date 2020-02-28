@@ -5,15 +5,15 @@ namespace CleanPayroll.Core.Taxes.UnitedStates
 {
   public sealed class MarginalEffectiveRateCalculator
   {
-    public TaxRate CalculateEffectiveRate(IReadOnlyCollection<(Money floor, TaxRate rate)> marginalRates, Money expectedSalary)
+    public TaxRate CalculateEffectiveRate(IReadOnlyCollection<TaxBracket> marginalRates, Money expectedSalary)
     {
-      var sortedMarginalRates = marginalRates.OrderBy(mr => mr.floor).ToList();
-      sortedMarginalRates.Add((new Money(1_000_000_000_000.00m), new TaxRate(1.0m)));
+      var sortedMarginalRates = marginalRates.OrderBy(mr => mr.Floor).ToList();
+      sortedMarginalRates.Add(new TaxBracket(new Money(1_000_000_000_000.00m), new TaxRate(1.0m)));
 
       Money remaining = new Money(expectedSalary.Value);
       decimal effectiveRate = 0.0m;
 
-      foreach ((Money floor, Money ceiling, TaxRate rate) in sortedMarginalRates.Zip(sortedMarginalRates.Skip(1), ((r1, r2) => (r1.floor, r2.floor, r1.rate))))
+      foreach ((Money floor, Money ceiling, TaxRate rate) in sortedMarginalRates.Zip(sortedMarginalRates.Skip(1), ((r1, r2) => (r1.Floor, r2.Floor, r1.Rate))))
       {
         if (floor >= expectedSalary || remaining == Money.Zero)
         {

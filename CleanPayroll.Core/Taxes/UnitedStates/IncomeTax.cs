@@ -1,30 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using NodaTime;
 
 namespace CleanPayroll.Core.Taxes.UnitedStates
 {
   public sealed class IncomeTax : ITaxCalculator
   {
-    private static readonly IReadOnlyList<(Money floor, TaxRate rate)> Rates2019 = new List<(Money floor, TaxRate rate)>()
-    {
-      {(Money.Zero, new TaxRate(0.1m)) },
-      {(new Money(9701m), new TaxRate(0.12m)) },
-      {(new Money(39476m), new TaxRate(0.22m)) },
-      {(new Money(84201m), new TaxRate(0.24m)) },
-      {(new Money(160726m), new TaxRate(0.32m)) },
-      {(new Money(204101m), new TaxRate(0.35m)) },
-      {(new Money(510301m), new TaxRate(0.37m)) }
-    };
-
     private readonly MarginalEffectiveRateCalculator _rateCalculator = new MarginalEffectiveRateCalculator();
-    private readonly PayEstimator _estimator = new PayEstimator();
+    private readonly IPayEstimator _estimator;
+    private readonly IIncomeTaxBracketRepository _taxBracketRepository;
 
-    public TaxAssessment? Calculate(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate)
+    public IncomeTax(IIncomeTaxBracketRepository taxBracketRepository, IPayEstimator estimator)
     {
-      // TODO rates differ by context and year (we should look this up)
-      // TODO don't assume bi-weekly
-      TaxRate effective = _rateCalculator.CalculateEffectiveRate(Rates2019,
-        _estimator.EstimateSalaryOverYear(grossPayToDate, interval, new BiweeklyPayCycle(), grossPay));
+      _taxBracketRepository = taxBracketRepository;
+      _estimator = estimator;
+    }
+
+    public async Task<TaxAssessment?> CalculateAsync(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate)
+    {
+      TaxRate effective = _rateCalculator.CalculateEffectiveRate(await _taxBracketRepository.GetBracketsAsync(interval.End.Year, context.FilingStatus),
+        await _estimator.EstimateSalaryOverYearAsync(grossPayToDate, interval, employee.PayCycle, grossPay));
 
       return new TaxAssessment(Money.Zero, grossPay * effective);
     }

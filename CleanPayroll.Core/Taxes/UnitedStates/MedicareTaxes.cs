@@ -1,4 +1,5 @@
-﻿using NodaTime;
+﻿using System.Threading.Tasks;
+using NodaTime;
 
 namespace CleanPayroll.Core.Taxes.UnitedStates
 {
@@ -8,7 +9,7 @@ namespace CleanPayroll.Core.Taxes.UnitedStates
     public static readonly TaxRate AdditionalRate = new TaxRate(0.009m);
     public static readonly Money AdditionalRateStart = new Money(200_000m);
 
-    public TaxAssessment? Calculate(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate)
+    public Task<TaxAssessment?> CalculateAsync(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate)
     {
       Money tax = grossPay * MedicareTaxes.Rate;
       Money amt = Money.Zero;
@@ -23,7 +24,7 @@ namespace CleanPayroll.Core.Taxes.UnitedStates
         amt = diff * MedicareTaxes.AdditionalRate;
       }
 
-      return new TaxAssessment(tax, tax + amt);
+      return Task.FromResult<TaxAssessment?>(new TaxAssessment(tax, tax + amt));
     }
   }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using NodaTime;
 
 namespace CleanPayroll.Core.Taxes.UnitedStates
@@ -11,13 +12,13 @@ namespace CleanPayroll.Core.Taxes.UnitedStates
       { 2020, new Money(137_700m) }
     };
 
-    public TaxAssessment? Calculate(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate)
+    public Task<TaxAssessment?> CalculateAsync(DateInterval interval, TaxContext context, Employee employee, Money grossPay, Money grossPayToDate)
     {
       Money cap = SocialSecurityTaxes.PayCap[interval.Start.Year];
 
       Money tax = grossPay.GetTaxOnPayWithCap(grossPayToDate, cap, new TaxRate(0.062m));
 
-      return new TaxAssessment(tax, tax);
+      return Task.FromResult<TaxAssessment?>(new TaxAssessment(tax, tax));
     }
   }
 }
