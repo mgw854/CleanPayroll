@@ -20,7 +20,7 @@ namespace CleanPayroll.Core.Taxes.UnitedStates.Michigan
         return Task.FromResult<TaxAssessment?>(null);
       }
 
-      return Task.FromResult<TaxAssessment?>(new TaxAssessment(grossPay.GetTaxOnPayWithCap(grossPayToDate, UnemploymentTaxes.Ceiling, _employerRate), Money.Zero));
+      return Task.FromResult<TaxAssessment?>(new TaxAssessment("Michigan Unemployment Insurance Tax", grossPay.GetTaxOnPayWithCap(grossPayToDate, UnemploymentTaxes.Ceiling, _employerRate), Money.Zero));
     }
   }
 }

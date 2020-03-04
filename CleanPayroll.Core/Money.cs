@@ -56,6 +56,10 @@ namespace CleanPayroll.Core
     {
       return new Money(Math.Round(amount.Value * rate.Value, 2, MidpointRounding.ToEven));
     }
+    public static Money operator /(Money a, int b)
+    {
+      return new Money(Math.Round(a.Value / (decimal)b, 2, MidpointRounding.ToEven));
+    }
 
     public static decimal operator /(Money a, Money b)
     {

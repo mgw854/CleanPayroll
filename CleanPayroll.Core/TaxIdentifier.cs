@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CleanPayroll.Core
 {
-  public abstract class TaxIdentifier
+  public abstract class TaxIdentifier : IEquatable<TaxIdentifier>
   {
     protected readonly string _value;
 
@@ -14,6 +15,32 @@ namespace CleanPayroll.Core
 
     public string GetMaskedValue() => this.ToString();
     public abstract string GetFormattedSecureValue();
+
+    public override bool Equals(object obj)
+    {
+      return this.Equals(obj as TaxIdentifier);
+    }
+
+    public bool Equals(TaxIdentifier other)
+    {
+      return other != null &&
+             _value == other._value;
+    }
+
+    public override int GetHashCode()
+    {
+      return -1939223833 + EqualityComparer<string>.Default.GetHashCode(_value);
+    }
+
+    public static bool operator ==(TaxIdentifier left, TaxIdentifier right)
+    {
+      return EqualityComparer<TaxIdentifier>.Default.Equals(left, right);
+    }
+
+    public static bool operator !=(TaxIdentifier left, TaxIdentifier right)
+    {
+      return !(left == right);
+    }
   }
 
   public sealed class SocialSecurityNumber : TaxIdentifier

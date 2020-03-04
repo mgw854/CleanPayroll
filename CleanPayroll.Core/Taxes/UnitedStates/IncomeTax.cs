@@ -20,7 +20,7 @@ namespace CleanPayroll.Core.Taxes.UnitedStates
       TaxRate effective = _rateCalculator.CalculateEffectiveRate(await _taxBracketRepository.GetBracketsAsync(interval.End.Year, context.FilingStatus),
         await _estimator.EstimateSalaryOverYearAsync(grossPayToDate, interval, employee.PayCycle, grossPay));
 
-      return new TaxAssessment(Money.Zero, grossPay * effective);
+      return new TaxAssessment("Federal Income Tax", Money.Zero, grossPay * effective);
     }
   }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NodaTime;
 
 namespace CleanPayroll.Core
@@ -13,6 +14,12 @@ namespace CleanPayroll.Core
     public string Name { get; }
 
     public abstract IReadOnlyList<LocalDate> GetPayDates(int year);
+
+    public abstract int PaysPerYear { get; }
+    public IReadOnlyList<LocalDate> GetPayDates(int year, DateInterval interval)
+    {
+      return this.GetPayDates(year).Where(date => date > interval.Start && date <= interval.End).ToList();
+    }
   }
 
   public sealed class BiweeklyPayCycle : PayCycle
@@ -20,6 +27,8 @@ namespace CleanPayroll.Core
     public BiweeklyPayCycle() : base("Bi-weekly")
     {
     }
+
+    public override int PaysPerYear => 26;
 
     public override IReadOnlyList<LocalDate> GetPayDates(int year)
     {
@@ -41,6 +50,8 @@ namespace CleanPayroll.Core
     public SemimonthlyPayCycle() : base("Semi-monthly")
     {
     }
+
+    public override int PaysPerYear => 24;
 
     public override IReadOnlyList<LocalDate> GetPayDates(int year)
     {
@@ -79,6 +90,8 @@ namespace CleanPayroll.Core
     public MonthlyPayCycle() : base("Monthly")
     {
     }
+
+    public override int PaysPerYear => 12;
 
     public override IReadOnlyList<LocalDate> GetPayDates(int year)
     {

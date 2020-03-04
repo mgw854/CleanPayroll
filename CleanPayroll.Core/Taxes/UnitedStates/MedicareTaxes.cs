@@ -24,7 +24,7 @@ namespace CleanPayroll.Core.Taxes.UnitedStates
         amt = diff * MedicareTaxes.AdditionalRate;
       }
 
-      return Task.FromResult<TaxAssessment?>(new TaxAssessment(tax, tax + amt));
+      return Task.FromResult<TaxAssessment?>(new TaxAssessment("Medicare", tax, tax + amt));
     }
   }
 }

@@ -18,7 +18,7 @@ namespace CleanPayroll.Core.Taxes.UnitedStates
 
       Money tax = grossPay.GetTaxOnPayWithCap(grossPayToDate, cap, new TaxRate(0.062m));
 
-      return Task.FromResult<TaxAssessment?>(new TaxAssessment(tax, tax));
+      return Task.FromResult<TaxAssessment?>(new TaxAssessment("Social Security", tax, tax));
     }
   }
 }
