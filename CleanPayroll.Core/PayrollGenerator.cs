@@ -32,7 +32,7 @@ namespace CleanPayroll.Core
 
       foreach (Employee employee in employees)
       {
-        LocalDate firstDayOfPay = lastPayrollRan;
+        LocalDate firstDayOfPay = LocalDate.Max(lastPayrollRan, employee.StartDate);
 
         foreach (LocalDate payDate in employee.PayCycle.GetPayDates(payDay.Year, payInterval).Where(d => d > employee.StartDate))
         {

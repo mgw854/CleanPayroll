@@ -3,6 +3,8 @@ using NodaTime;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanPayroll.Core.Taxes.UnitedStates;
+using CleanPayroll.Core.Taxes.UnitedStates.Michigan;
 using Xunit;
 
 namespace CleanPayroll.Core.Tests
@@ -26,7 +28,12 @@ namespace CleanPayroll.Core.Tests
       LocalDate today = new LocalDate(2020, 02, 01);
 
       // Generate pay checks per employee
-      List<ITaxCalculator> taxCalculators = new List<ITaxCalculator>();
+      List<ITaxCalculator> taxCalculators = new List<ITaxCalculator>(){
+        new IncomeTax(new FakeIncomeTaxBracketRepository(), new CeterisParibusPayEstimator()),
+        new UnemploymentTaxes(new TaxRate(0.05m)),
+        new MedicareTaxes(),
+        new SocialSecurityTaxes()
+      };
       PayrollGenerator generator = new PayrollGenerator(new FakePayrollRepository(), employeeRepository, taxCalculators);
       IReadOnlyCollection<Paycheck> checks = await generator.GeneratePaychecksAsync(employer.EIN, today);
     }

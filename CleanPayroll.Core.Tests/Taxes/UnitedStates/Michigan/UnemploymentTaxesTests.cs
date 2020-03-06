@@ -35,7 +35,7 @@ namespace CleanPayroll.Core.Tests.Taxes.UnitedStates.Michigan
 
       TaxAssessment assessed = (await calc.CalculateAsync(null, null,
         new Employee(new EmployerIdentificationNumber("123456789"), new SocialSecurityNumber("123456789"), "John Q. Doe",
-          new StreetAddress("123 Main Street", "Detroit", "Michigan"), new NodaTime.LocalDate(2010, 01, 01), null, new Money(100_000m), new BiweeklyPayCycle(), FilingStatus.Single), new Money(1_000m), new Money(10_000m))).Value;
+          new StreetAddress("123 Main Street", "Detroit", "Michigan"), new NodaTime.LocalDate(2010, 01, 01), null, new Money(100_000m), new BiweeklyPayCycle(), FilingStatus.Single), new Money(1_000m), new Money(0m))).Value;
 
       Assert.Equal(Money.Zero, assessed.EmployeeContribution);
       Assert.Equal(new Money(47.00m), assessed.EmployerContribution);
@@ -49,7 +49,7 @@ namespace CleanPayroll.Core.Tests.Taxes.UnitedStates.Michigan
 
       TaxAssessment assessed = (await calc.CalculateAsync(null, null,
         new Employee(new EmployerIdentificationNumber("123456789"), new SocialSecurityNumber("123456789"), "John Q. Doe",
-          new StreetAddress("123 Main Street", "Detroit", "Michigan"), new NodaTime.LocalDate(2010, 01, 01), null, new Money(100_000m), new BiweeklyPayCycle(), FilingStatus.Single), new Money(1_000m), new Money(10_000m))).Value;
+          new StreetAddress("123 Main Street", "Detroit", "Michigan"), new NodaTime.LocalDate(2010, 01, 01), null, new Money(100_000m), new BiweeklyPayCycle(), FilingStatus.Single), new Money(1_000m), new Money(8_500m))).Value;
 
       Assert.Equal(Money.Zero, assessed.EmployeeContribution);
       Assert.Equal(new Money(23.50m), assessed.EmployerContribution);
